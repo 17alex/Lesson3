@@ -1,3 +1,5 @@
+import Foundation
+
 class MyClass {
     var name: String
     
@@ -6,7 +8,7 @@ class MyClass {
     }
 }
 
-struct MyContainer {
+struct MyStruct {
     private var myClass: MyClass
     
     var name: String {
@@ -20,25 +22,40 @@ struct MyContainer {
         }
     }
     
-    init(myClass: MyClass) {
-        self.myClass = myClass
+    init(name: String) {
+        self.myClass = MyClass(name: name)
+    }
+    
+    func printName() {
+        print(Unmanaged.passUnretained(myClass).toOpaque(), " - \(myClass.name)")
     }
 }
 
-let myClass1 = MyClass(name: "name1")
+var myStruct1 = MyStruct(name: "name1")
+var myStruct2 = myStruct1
+var myStruct3 = myStruct2
 
-var myContainer1 = MyContainer(myClass: myClass1)
-var myContainer2 = myContainer1
+myStruct1.printName() //0x00006000033bc140  - name1
+myStruct2.printName() //0x00006000033bc140  - name1
+myStruct3.printName() //0x00006000033bc140  - name1
 
-myContainer1.name
-myContainer2.name
+print("\n")
 
-myContainer2.name = "name2"
+myStruct2.name = "name2"
+myStruct1.printName() //0x00006000033bc140  - name1
+myStruct2.printName() //0x00006000033bcd20  - name2
+myStruct3.printName() //0x00006000033bc140  - name1
 
-myContainer1.name
-myContainer2.name
+print("\n")
 
-myContainer1.name = "name3"
+myStruct1.name = "name3"
+myStruct1.printName() //0x00006000033bce40  - name3
+myStruct2.printName() //0x00006000033bcd20  - name2
+myStruct3.printName() //0x00006000033bc140  - name1
 
-myContainer1.name
-myContainer2.name
+print("\n")
+
+myStruct1.name = "name4"
+myStruct1.printName() //0x00006000033bce40  - name4
+myStruct2.printName() //0x00006000033bcd20  - name2
+myStruct3.printName() //0x00006000033bc140  - name1
