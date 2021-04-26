@@ -49,6 +49,9 @@ extension MyIntOptional {
     }
 }
 
+var valueIsNil: MyIntOptional = .none // none
+var valueNoNil: MyIntOptional = .some(0) // some(0)
+
 var value1 = MyIntOptional(1) // some(1)
 value1*?.toStr() // "Some(1)"
 
